@@ -52,8 +52,8 @@ The Tutorland Payment System is a React Native application designed to manage tu
 ### Clone the Repository:
 
 ```bash
-git clone https://github.com/your-username/account-management-app.git
-cd account-management-app
+git clone https://github.com/Jayjayjay86/TL-PaymentSystem.git
+cd TL-PaymentSystem
 ```
 
 ### Install Dependencies:
@@ -168,4 +168,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 For questions or feedback, please contact:
 
 - **Your Name**: your-email@example.com
-- **GitHub**: [your-username](https://github.com/your-username)
+- **GitHub**: [jayjayjay86](https://github.com/jayjayjay86))
