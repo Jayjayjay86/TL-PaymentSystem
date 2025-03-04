@@ -1,97 +1,171 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Tutorland Payment System
 
-# Getting Started
+The Tutorland Payment System is a React Native application designed to manage tutoring accounts, track payments, and organize student entries. It provides an intuitive interface for tutors to add, edit, and delete accounts, as well as manage entries for each student. The app also includes features like searching for accounts, loading backups, and handling payments and complementary hours.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+### Account Management:
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- Add new accounts.
+- Edit existing accounts (e.g., update account name, course price, etc.).
+- Delete accounts.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Entry Management:
 
-```sh
-# Using npm
-npm start
+- Add new entries to an account.
+- Edit existing entries (e.g., update date, notes, etc.).
+- Delete entries.
 
-# OR using Yarn
-yarn start
+### Search Functionality:
+
+- Search for accounts by name.
+
+### Backup and Restore:
+
+- Load accounts from a backup.
+- Delete all data (with a long-press confirmation).
+
+### Visual Indicators:
+
+- Icons for double lessons, paid lessons, end-of-cycle, and notes.
+- Color-coded accents for entries.
+
+### Swipe Gestures:
+
+- Swipe left or right to navigate between accounts.
+
+### Responsive Design:
+
+- Works seamlessly on both Android and iOS devices.
+
+## Screenshots
+
+- Account List
+- Add Entry
+- Edit Account
+- Search Accounts
+- No Accounts
+- No Entries
+
+## Installation
+
+### Clone the Repository:
+
+```bash
+git clone https://github.com/your-username/account-management-app.git
+cd account-management-app
 ```
 
-## Step 2: Build and run your app
+### Install Dependencies:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+```bash
+npm install
 ```
 
-### iOS
+### Run the App:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+#### For Android:
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+```bash
+npx react-native run-android
 ```
 
-Then, and every time you update your native dependencies, run:
+#### For iOS:
 
-```sh
-bundle exec pod install
+```bash
+npx react-native run-ios
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Usage
 
-```sh
-# Using npm
-npm run ios
+### 1. Adding an Account
 
-# OR using Yarn
-yarn ios
+- Tap the `✨ New Account` button at the bottom of the screen.
+- Fill in the account details (e.g., account name, course price, etc.).
+- Tap `Save` to create the account.
+
+### 2. Adding an Entry
+
+- Select an account from the list.
+- Tap the `✨ Add Entry` button at the bottom of the screen.
+- Fill in the entry details (e.g., date, notes, etc.).
+- Tap `Save` to add the entry.
+
+### 3. Editing an Account
+
+- Select the account you want to edit.
+- Tap the edit icon (pencil) next to the account name.
+- Update the account details and tap `Save`.
+
+### 4. Deleting an Account
+
+- Select the account you want to delete.
+- Tap the delete icon (bin) next to the account name.
+- Confirm the deletion.
+
+### 5. Searching for an Account
+
+- Tap the search icon (magnifying glass) next to the account name.
+- Enter the account name in the search bar.
+- Select the account from the search results.
+
+### 6. Loading Backups
+
+- If no accounts are found, tap the `✨ Load Accounts From Backup` button.
+- The app will load accounts from a predefined backup.
+
+### 7. Deleting All Data
+
+- Long-press the `Course Price` text for 5 seconds.
+- Confirm the deletion in the modal that appears.
+
+## File Structure
+
+```
+src/
+├── assets/
+│   ├── images/ # Contains all images used in the app
+│   └── ...
+├── components/
+│   ├── modals/ # Contains all modal components
+│   └── ...
+├── database/ # Contains database-related files
+│   ├── Accounts.js # Functions for managing accounts
+│   └── data.js # Predefined data (e.g., student names)
+├── utils/ # Utility functions
+│   └── misc.js # Helper functions (e.g., capitalizeString)
+└── ...
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Dependencies
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+- **React Native**: Core framework for building the app.
+- **PanResponder**: Handles swipe gestures for account navigation.
+- **FlatList**: Efficiently renders lists of accounts and entries.
+- **Image**: Displays icons and images.
+- **TouchableOpacity**: Provides touchable buttons and interactions.
 
-## Step 3: Modify your app
+## Customization
 
-Now that you have successfully run the app, let's make changes!
+- **Icons**: Replace the images in the `assets/images` folder with your own.
+- **Colors**: Update the colors in the `styles` object to match your theme.
+- **Database**: Modify the `database/Accounts.js` file to change how accounts and entries are stored and retrieved.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Contributing
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+Contributions are welcome! If you'd like to contribute, please follow these steps:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Submit a pull request.
 
-## Congratulations! :tada:
+## License
 
-You've successfully run and modified your React Native App. :partying_face:
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
-### Now what?
+## Contact
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+For questions or feedback, please contact:
 
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- **Your Name**: your-email@example.com
+- **GitHub**: [your-username](https://github.com/your-username)

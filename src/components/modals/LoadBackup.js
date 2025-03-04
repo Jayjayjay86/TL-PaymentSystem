@@ -20,7 +20,7 @@ const LoadBackup = ({visible, onClose, handleLoadBackupAccounts}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -43,7 +43,7 @@ const LoadBackup = ({visible, onClose, handleLoadBackupAccounts}) => {
             </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+ 
     </Modal>
   );
 };

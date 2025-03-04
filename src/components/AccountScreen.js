@@ -8,21 +8,18 @@ import {
   View,
   Image,
 } from 'react-native';
-import EditEntry from '../../src/components/modals/AddEntry';
+import EditEntry from '../../src/components/modals/EditEntry';
 import AddEntry from '../../src/components/modals/AddEntry';
 import EditAccount from '../../src/components/modals/EditAccount';
 import AddAccount from '../../src/components/modals/AddAccount';
 import DeleteAccount from '../../src/components/modals/DeleteAccount';
 
-import {
-  createAccount,
-  destroyAccounts,
-  getAllAccounts,
-} from '../../src/database/Accounts';
+import {createAccount, getAllAccounts} from '../../src/database/Accounts';
 
 import {currentStudentNames} from '../../src/database/data';
 import DeleteEntry from '../../src/components/modals/DeleteEntry';
 import SearchByName from '../../src/components/modals/SearchByName';
+import SplashScreen from '../../src/components/SplashScreen';
 import {capitalizeString} from '../../src/utils/misc';
 import DeleteAllData from '../../src/components/modals/DeleteAllData';
 import LoadBackup from '../../src/components/modals/LoadBackup';
@@ -37,15 +34,10 @@ const noStudentImage = require('../../src/assets/images/noStudents.png');
 const noAccountsImage = require('../../src/assets/images/noAccounts.png');
 const searchImage = require('../../src/assets/images/search.png');
 
-const defaultAccount = {
-  id: '',
-  accountName: '',
-  complementaryHours: 0,
-  timePaidInHours: 0,
-  coursePrice: 0,
-  entries: [],
-};
+import {defaultAccount} from '../../src/utils/misc';
+
 const AccountScreen = () => {
+  const [loading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentAccount, setCurrentAccount] = useState(accounts[currentIndex]);
@@ -179,14 +171,18 @@ const AccountScreen = () => {
   useEffect(() => {
     const firstLoad = async () => {
       const accountsArray = await getAllAccounts();
-
       setAccounts(accountsArray);
       if (accountsArray.length === 0) {
         handleLoadBackups();
       }
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      setLoading(false);
     };
     firstLoad();
   }, []);
+  if (loading) {
+    return <SplashScreen />;
+  }
   return (
     <View style={styles.container}>
       {accounts.length > 0 && currentAccount ? (
@@ -247,12 +243,30 @@ const AccountScreen = () => {
             {currentAccount && currentAccount.entries.length > 0 ? (
               <>
                 <FlatList
+                  keyExtractor={(item, index) => `${index}/${item.id}`}
                   data={currentAccount.entries}
                   renderItem={({item, index}) => (
-                    <View
-                      key={`${index}/${item.id}`}
-                      style={styles.entryDetails}>
-                      <TouchableOpacity onPress={() => handleEntryPress(item)}>
+                    <View style={styles.entryDetails}>
+                      {item.colorBar && item.colorBar.key !== '#FFDAC1' && (
+                        <>
+                          <View
+                            style={[
+                              styles.colorPickerAccent,
+                              {
+                                backgroundColor: item.colorBar
+                                  ? item.colorBar.key === '#FFDAC1'
+                                    ? '#F5F5F5'
+                                    : item.colorBar.key
+                                  : '#F5F5F5',
+                              },
+                            ]}
+                          />
+                        </>
+                      )}
+
+                      <TouchableOpacity
+                        style={styles.pressEntryButton}
+                        onPress={() => handleEntryPress(item)}>
                         <Text style={styles.entryDate}>
                           {`${new Date(item.date).getDate()}/${
                             new Date(item.date).getMonth() + 1
@@ -304,22 +318,11 @@ const AccountScreen = () => {
       )}
 
       <View style={styles.fabContainer}>
-        {/* <TouchableOpacity
-              style={[styles.fab, {backgroundColor: '#ff9aa2'}]}
-              onPress={() => handleLoadBackups()}>
-              <Text style={styles.fabText}>🎉 Load Backups</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.fab, {backgroundColor: '#ff9aa2'}]}
-              onPress={() => setAddEntryModalVisible(true)}>
-              <Text style={styles.fabText}>🎉 Add entry</Text>
-            </TouchableOpacity> */}
-
         <>
           <TouchableOpacity
             style={[styles.fab, {backgroundColor: '#ff9aa2'}]}
             onPress={() => setAddEntryModalVisible(true)}>
-            <Text style={styles.fabText}>🎉 Add entry</Text>
+            <Text style={styles.fabText}>✨ Add entry</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.fab, {backgroundColor: '#b0e57c'}]}
@@ -341,7 +344,7 @@ const AccountScreen = () => {
               },
             ]}
             onPress={() => handleLoadBackups()}>
-            <Text style={styles.fabText}>🎉 Load Accounts From Backup</Text>
+            <Text style={styles.fabText}>✨ Load Accounts From Backup</Text>
           </TouchableOpacity>
         </>
       )}
@@ -352,15 +355,7 @@ const AccountScreen = () => {
         accounts={accounts}
         setCurrentIndex={setCurrentIndex}
       />
-      <EditEntry
-        reload={reload}
-        visible={editEntryModalVisible}
-        onClose={closeEditEntryModal}
-        entry={selectedEntry}
-        currentAccount={currentAccount}
-        binImage={binImage}
-        setDeleteEntryModalVisible={setDeleteEntryModalVisible}
-      />
+
       <AddEntry
         reload={reload}
         setCurrentIndex={setCurrentIndex}
@@ -369,6 +364,15 @@ const AccountScreen = () => {
         entry={defaultAccount}
         accounts={accounts}
         currentAccount={currentAccount}
+      />
+      <EditEntry
+        reload={reload}
+        visible={editEntryModalVisible}
+        onClose={closeEditEntryModal}
+        entry={selectedEntry}
+        currentAccount={currentAccount}
+        binImage={binImage}
+        setDeleteEntryModalVisible={setDeleteEntryModalVisible}
       />
       <AddAccount
         reload={reload}
@@ -395,6 +399,7 @@ const AccountScreen = () => {
         onClose={closeDeleteEntryModal}
         account={currentAccount}
         entry={selectedEntry}
+        setEditEntryModalVisible={setEditEntryModalVisible}
       />
       <DeleteAllData
         visible={deleteAllDataModalVisible}
@@ -412,6 +417,23 @@ const AccountScreen = () => {
 export default AccountScreen;
 
 const styles = StyleSheet.create({
+  colorPickerAccent: {
+    height: 28,
+    width: 22,
+    borderRadius: 2,
+  },
+  colorBarButtonText: {
+    fontSize: 13,
+    flex: 1,
+    fontWeight: 'bold',
+    color: '#4A4A4A',
+
+    lineHeight: 20,
+  },
+  colorBarInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   container: {
     flexDirection: 'center',
     padding: 10,
@@ -499,30 +521,33 @@ const styles = StyleSheet.create({
   imagesContainer: {flexDirection: 'row'},
   imageBox: {
     justifyContent: 'center',
-    paddingHorizontal: 1,
-    width: 27,
-    height: 27,
+    marginHorizontal: 3,
+    width: 25,
+    height: 25,
   },
   editImage: {width: 24, height: 24, margin: 8},
   searchImage: {width: 35, height: 35, margin: 8},
-  image: {width: 18, height: 18},
+  image: {width: 30, height: 30},
   entryDetails: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    width: '49%',
+    width: '70%',
+    alignItems: 'center',
   },
   entryDate: {
-    fontSize: 17,
+    fontSize: 29,
     fontWeight: 'bold',
     color: '#4A4A4A',
     fontFamily: 'Poppins-SemiBold',
-    lineHeight: 25, // Adjust as needed
+    lineHeight: 30, // Adjust as needed
     padding: 0,
-
-    width: 40,
+    marginVertical: 6,
+    width: 80,
     alignSelf: 'center',
     textAlign: 'center',
+    marginHorizontal: 3,
+    marginLeft: 10,
   },
   addButton: {
     backgroundColor: 'blue',

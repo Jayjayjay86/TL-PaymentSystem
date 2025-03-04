@@ -8,12 +8,50 @@ import {
   StyleSheet,
   ToastAndroid,
 } from 'react-native';
+import {updateAccount} from '../../database/Accounts';
 
-const DeleteEntry = ({visible, onClose, account, entry}) => {
+const DeleteEntry = ({
+  visible,
+  onClose,
+  account,
+  entry,
+  reload,
+  setEditEntryModalVisible,
+}) => {
   const onDelete = async () => {
-    console.log('finally deleting');
-    console.log(account);
-    console.log(entry);
+    try {
+      const entryIndex = account.entries.findIndex(
+        ent =>
+          ent.id === entry.id &&
+          new Date(ent.date).toDateString() ===
+            new Date(entry.date).toDateString(),
+      );
+      if (entryIndex === -1) {
+        ToastAndroid.show('Entry not found', ToastAndroid.SHORT);
+        return;
+      }
+
+      const updatedEntries = account.entries.filter(
+        (ent, index) => index !== entryIndex,
+      );
+
+      const confirmation = await updateAccount({
+        ...account,
+        entries: updatedEntries,
+      });
+      if (confirmation) {
+        ToastAndroid.show('Entry Deleted', ToastAndroid.BOTTOM);
+
+        await reload();
+        setEditEntryModalVisible(false);
+        onClose();
+      } else {
+        ToastAndroid.show('Error', ToastAndroid.BOTTOM);
+      }
+    } catch (error) {
+      ToastAndroid.show('Error', ToastAndroid.BOTTOM);
+      console.error(error);
+    }
   };
   return (
     <Modal
@@ -21,18 +59,15 @@ const DeleteEntry = ({visible, onClose, account, entry}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         {account && (
           <>
             <View style={styles.modalOverlay}>
               {entry && (
                 <View style={styles.modalContent}>
                   <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Deleting Entry on:</Text>
-                    <Text>
-                      {' '}
-                      {new Date(entry.date).toLocaleDateString('en-GB')}
-                    </Text>
+                    <Text style={styles.modalTitle}>Deleting Entry:</Text>
+
                     <View style={styles.modalHeaderAccent} />
                   </View>
 
@@ -40,6 +75,14 @@ const DeleteEntry = ({visible, onClose, account, entry}) => {
                     <View style={styles.modalDetail}>
                       <Text style={styles.detailTitle}>Account Name: </Text>
                       <Text style={styles.detail}>{account.accountName}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.modalDetailContainer}>
+                    <View style={styles.modalDetail}>
+                      <Text style={styles.detailTitle}>Date: </Text>
+                      <Text style={styles.detail}>
+                        {new Date(entry.date).toLocaleDateString('en-GB')}
+                      </Text>
                     </View>
                   </View>
 
@@ -52,7 +95,7 @@ const DeleteEntry = ({visible, onClose, account, entry}) => {
                     <TouchableOpacity
                       style={[styles.modalButton, styles.saveButton]}
                       onPress={() => onDelete()}>
-                      <Text style={styles.buttonText}>Add Account</Text>
+                      <Text style={styles.buttonText}>Delete Entry</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -60,7 +103,7 @@ const DeleteEntry = ({visible, onClose, account, entry}) => {
             </View>
           </>
         )}
-      </TouchableWithoutFeedback>
+    
     </Modal>
   );
 };

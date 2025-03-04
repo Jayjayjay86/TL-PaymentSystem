@@ -16,7 +16,6 @@ const SearchByName = ({visible, onClose, accounts, setCurrentIndex}) => {
   const [filteredAccounts, setFilteredAccounts] = useState([]);
 
   const handlePressSearchTerm = account => {
-    console.log('pressing', account);
     const accountIndex = accounts.findIndex(
       acc => acc.accountName === account.accountName,
     );
@@ -41,7 +40,7 @@ const SearchByName = ({visible, onClose, accounts, setCurrentIndex}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -89,7 +88,7 @@ const SearchByName = ({visible, onClose, accounts, setCurrentIndex}) => {
             </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+     
     </Modal>
   );
 };

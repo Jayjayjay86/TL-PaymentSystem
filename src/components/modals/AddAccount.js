@@ -55,7 +55,7 @@ const AddAccount = ({reload, visible, onClose, accounts}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -124,7 +124,7 @@ const AddAccount = ({reload, visible, onClose, accounts}) => {
             </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+     
     </Modal>
   );
 };

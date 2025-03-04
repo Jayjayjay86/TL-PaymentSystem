@@ -11,12 +11,15 @@ import {
 
 import {removeAccount} from '../../database/Accounts';
 
-const DeleteAccount = ({visible, onClose, account}) => {
+const DeleteAccount = ({visible, onClose, account, reload}) => {
   const onDelete = async () => {
     try {
       const confirmation = await removeAccount(account.id);
       if (confirmation) {
         ToastAndroid.show('Account Deleted', ToastAndroid.BOTTOM);
+        await reload();
+
+        onClose();
       } else {
         ToastAndroid.show('Error!', ToastAndroid.BOTTOM);
       }
@@ -31,13 +34,13 @@ const DeleteAccount = ({visible, onClose, account}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+    
         {account && (
           <>
             <View style={styles.modalOverlay}>
               <View style={styles.modalContent}>
                 <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Deleting Account for:</Text>
+                  <Text style={styles.modalTitle}>Deleting Account:</Text>
                   <View style={styles.modalHeaderAccent} />
                 </View>
 
@@ -67,14 +70,14 @@ const DeleteAccount = ({visible, onClose, account}) => {
                   <TouchableOpacity
                     style={[styles.modalButton, styles.saveButton]}
                     onPress={() => onDelete()}>
-                    <Text style={styles.buttonText}>Add Account</Text>
+                    <Text style={styles.buttonText}>Delete</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </>
         )}
-      </TouchableWithoutFeedback>
+    
     </Modal>
   );
 };

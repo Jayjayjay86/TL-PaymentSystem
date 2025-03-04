@@ -47,7 +47,7 @@ const EditAccount = ({reload, visible, onClose, account}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         {account && editableAccount && (
           <>
             <View style={styles.modalOverlay}>
@@ -132,7 +132,7 @@ const EditAccount = ({reload, visible, onClose, account}) => {
             </View>
           </>
         )}
-      </TouchableWithoutFeedback>
+    
     </Modal>
   );
 };

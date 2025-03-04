@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {updateAccount} from '../../database/Accounts';
+import {ColorPickerModal} from '../ColorPickerModal';
 
 const EditEntry = ({
   currentAccount,
@@ -21,7 +22,6 @@ const EditEntry = ({
   binImage,
   setDeleteEntryModalVisible,
 }) => {
-  console.log(entry);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [editableEntry, setEditableEntry] = useState({...entry});
   const handlePressDelete = () => {
@@ -36,7 +36,12 @@ const EditEntry = ({
       }));
     }
   };
-
+  const handleColorChange = color => {
+    setEditableEntry(prevState => ({
+      ...prevState,
+      colorBar: color,
+    }));
+  };
   const onSave = async () => {
     try {
       const entryIndex = currentAccount.entries.findIndex(
@@ -86,110 +91,32 @@ const EditEntry = ({
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.modalOverlay}>
-          {entry && (
-            <>
-              <View style={styles.modalContent}>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Edit entry</Text>
-                  <TouchableOpacity onPress={() => handlePressDelete()}>
-                    <Image style={styles.editImage} source={binImage}></Image>
-                  </TouchableOpacity>
+      <View style={styles.modalOverlay}>
+        {entry && (
+          <>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Edit entry</Text>
+                <TouchableOpacity onPress={() => handlePressDelete()}>
+                  <Image style={styles.editImage} source={binImage}></Image>
+                </TouchableOpacity>
 
-                  <View style={styles.modalHeaderAccent} />
-                </View>
-                <View style={styles.dateGroup}>
-                  <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                    <Text style={styles.entryDate}>
-                      Date:{' '}
-                      {`${new Date(editableEntry.date).toLocaleDateString(
-                        'en-GB',
-                      )}`}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.selectGroup}>
-                  <View style={styles.selectInput}>
-                    <Text style={styles.buttonText}>End Of Cycle:</Text>
-                    {editableEntry.endOfCycle ? (
-                      <>
-                        <TouchableOpacity
-                          style={[
-                            styles.modalButton,
-                            {backgroundColor: '#B0E57C'},
-                          ]}
-                          onPress={() =>
-                            setEditableEntry(prevState => ({
-                              ...prevState,
-                              endOfCycle: !editableEntry.endOfCycle,
-                            }))
-                          }>
-                          <Text style={[styles.buttonText]}>Yes</Text>
-                        </TouchableOpacity>
-                      </>
-                    ) : (
-                      <>
-                        <TouchableOpacity
-                          style={[
-                            styles.modalButton,
-                            {backgroundColor: '#ff9aa2'},
-                          ]}
-                          onPress={() =>
-                            setEditableEntry(prevState => ({
-                              ...prevState,
-                              endOfCycle: !editableEntry.endOfCycle,
-                            }))
-                          }>
-                          <Text style={[styles.buttonText]}>No</Text>
-                        </TouchableOpacity>
-                      </>
-                    )}
-                  </View>
-                </View>
-
-                <View style={styles.selectGroup}>
-                  <View style={styles.selectInput}>
-                    <Text style={styles.buttonText}>Double Lesson:</Text>
-                    {editableEntry.isDoubleLesson ? (
-                      <>
-                        <TouchableOpacity
-                          style={[
-                            styles.modalButton,
-                            {backgroundColor: '#B0E57C'},
-                          ]}
-                          onPress={() =>
-                            setEditableEntry(prevState => ({
-                              ...prevState,
-                              isDoubleLesson: !editableEntry.isDoubleLesson,
-                            }))
-                          }>
-                          <Text style={[styles.buttonText]}>Yes</Text>
-                        </TouchableOpacity>
-                      </>
-                    ) : (
-                      <>
-                        <TouchableOpacity
-                          style={[
-                            styles.modalButton,
-                            {backgroundColor: '#ff9aa2'},
-                          ]}
-                          onPress={() =>
-                            setEditableEntry(prevState => ({
-                              ...prevState,
-                              isDoubleLesson: !editableEntry.isDoubleLesson,
-                            }))
-                          }>
-                          <Text style={[styles.buttonText]}>No</Text>
-                        </TouchableOpacity>
-                      </>
-                    )}
-                  </View>
-                </View>
-
+                <View style={styles.modalHeaderAccent} />
+              </View>
+              <View style={styles.dateGroup}>
+                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                  <Text style={styles.entryDate}>
+                    Date:{' '}
+                    {`${new Date(editableEntry.date).toLocaleDateString(
+                      'en-GB',
+                    )}`}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.selectGroup}>
                 <View style={styles.selectInput}>
-                  <Text style={styles.buttonText}>Paid on Date:</Text>
-                  {editableEntry.paidOnDate ? (
+                  <Text style={styles.buttonText}>End Of Cycle:</Text>
+                  {editableEntry.endOfCycle ? (
                     <>
                       <TouchableOpacity
                         style={[
@@ -199,16 +126,10 @@ const EditEntry = ({
                         onPress={() =>
                           setEditableEntry(prevState => ({
                             ...prevState,
-                            paidOnDate: !editableEntry.paidOnDate,
+                            endOfCycle: !editableEntry.endOfCycle,
                           }))
                         }>
-                        <Text
-                          style={[
-                            styles.buttonText,
-                            {backgroundColor: '#B0E57C'},
-                          ]}>
-                          Yes
-                        </Text>
+                        <Text style={[styles.buttonText]}>Yes</Text>
                       </TouchableOpacity>
                     </>
                   ) : (
@@ -221,7 +142,7 @@ const EditEntry = ({
                         onPress={() =>
                           setEditableEntry(prevState => ({
                             ...prevState,
-                            paidOnDate: !editableEntry.paidOnDate,
+                            endOfCycle: !editableEntry.endOfCycle,
                           }))
                         }>
                         <Text style={[styles.buttonText]}>No</Text>
@@ -229,33 +150,128 @@ const EditEntry = ({
                     </>
                   )}
                 </View>
+              </View>
 
-                <View style={styles.buttonGroup}>
-                  <TouchableOpacity
-                    style={[styles.modalButton, styles.cancelButton]}
-                    onPress={() => onClose()}>
-                    <Text style={styles.buttonText}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.modalButton, styles.saveButton]}
-                    onPress={() => onSave()}>
-                    <Text style={styles.buttonText}>Save Changes</Text>
-                  </TouchableOpacity>
+              <View style={styles.selectGroup}>
+                <View style={styles.selectInput}>
+                  <Text style={styles.buttonText}>Double Lesson:</Text>
+                  {editableEntry.isDoubleLesson ? (
+                    <>
+                      <TouchableOpacity
+                        style={[
+                          styles.modalButton,
+                          {backgroundColor: '#B0E57C'},
+                        ]}
+                        onPress={() =>
+                          setEditableEntry(prevState => ({
+                            ...prevState,
+                            isDoubleLesson: !editableEntry.isDoubleLesson,
+                          }))
+                        }>
+                        <Text style={[styles.buttonText]}>Yes</Text>
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <>
+                      <TouchableOpacity
+                        style={[
+                          styles.modalButton,
+                          {backgroundColor: '#ff9aa2'},
+                        ]}
+                        onPress={() =>
+                          setEditableEntry(prevState => ({
+                            ...prevState,
+                            isDoubleLesson: !editableEntry.isDoubleLesson,
+                          }))
+                        }>
+                        <Text style={[styles.buttonText]}>No</Text>
+                      </TouchableOpacity>
+                    </>
+                  )}
                 </View>
               </View>
 
-              {showDatePicker && (
-                <DateTimePicker
-                  value={new Date()}
-                  mode="date"
-                  display="default"
-                  onChange={handleDateChange}
+              <View style={styles.selectInput}>
+                <Text style={styles.buttonText}>Paid on Date:</Text>
+                {editableEntry.paidOnDate ? (
+                  <>
+                    <TouchableOpacity
+                      style={[styles.modalButton, {backgroundColor: '#B0E57C'}]}
+                      onPress={() =>
+                        setEditableEntry(prevState => ({
+                          ...prevState,
+                          paidOnDate: !editableEntry.paidOnDate,
+                        }))
+                      }>
+                      <Text
+                        style={[
+                          styles.buttonText,
+                          {backgroundColor: '#B0E57C'},
+                        ]}>
+                        Yes
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                ) : (
+                  <>
+                    <TouchableOpacity
+                      style={[styles.modalButton, {backgroundColor: '#ff9aa2'}]}
+                      onPress={() =>
+                        setEditableEntry(prevState => ({
+                          ...prevState,
+                          paidOnDate: !editableEntry.paidOnDate,
+                        }))
+                      }>
+                      <Text style={[styles.buttonText]}>No</Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+              <View style={styles.colorBarInput}>
+                <Text style={styles.colorBarButtonText}>Color:</Text>
+
+                <ColorPickerModal
+                  entry={editableEntry}
+                  handleColorChange={handleColorChange}
                 />
-              )}
-            </>
-          )}
-        </View>
-      </TouchableWithoutFeedback>
+                <View
+                  style={[
+                    styles.colorPickerAccent,
+                    {
+                      backgroundColor: editableEntry.colorBar
+                        ? editableEntry.colorBar.key === '#FFDAC1'
+                          ? '#F5F5F5'
+                          : editableEntry.colorBar.key
+                        : '#F5F5F5',
+                    },
+                  ]}
+                />
+              </View>
+              <View style={styles.buttonGroup}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => onClose()}>
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.saveButton]}
+                  onPress={() => onSave()}>
+                  <Text style={styles.buttonText}>Save Changes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={new Date()}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            )}
+          </>
+        )}
+      </View>
     </Modal>
   );
 };
@@ -263,6 +279,24 @@ const EditEntry = ({
 export default EditEntry;
 
 const styles = StyleSheet.create({
+  colorPickerAccent: {
+    height: 38,
+    width: 10,
+
+    borderRadius: 2,
+  },
+  colorBarButtonText: {
+    fontSize: 13,
+    flex: 1,
+    fontWeight: 'bold',
+    color: '#4A4A4A',
+
+    lineHeight: 20,
+  },
+  colorBarInput: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   editImage: {width: 24, height: 24, margin: 10},
   modalOverlay: {
     flex: 1,
@@ -271,7 +305,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: '#F5F5F5',
     borderRadius: 28,
     padding: 24,
     width: '90%',
@@ -300,7 +334,7 @@ const styles = StyleSheet.create({
   },
   modalHeader: {
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: 'rgb(209, 205, 205)',
     paddingBottom: 16,
     marginBottom: 24,
     position: 'relative',
@@ -343,7 +377,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   buttonText: {
     fontSize: 13,

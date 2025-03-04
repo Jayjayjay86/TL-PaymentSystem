@@ -33,7 +33,7 @@ const DeleteAllData = ({visible, onClose, reload}) => {
       transparent={true}
       animationType="slide"
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={onClose}>
+     
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -65,7 +65,7 @@ const DeleteAllData = ({visible, onClose, reload}) => {
             </View>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      
     </Modal>
   );
 };
